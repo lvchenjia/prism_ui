@@ -1057,7 +1057,8 @@ class _RenderPopupMorph extends RenderProxyBox {
           style: LiquidGlassStyle.lerp(glass.from, glass.to, remaining)
               .copyWith(
                 blur: lerpDouble(glass.to.blur, glass.from.blur, absorbed),
-              ),
+              )
+              .scale(1 - absorbed),
           hold: bounds
               .expandToInclude(from)
               .expandToInclude(anchor.inflate(anchor.longestSide))
