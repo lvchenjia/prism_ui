@@ -243,7 +243,8 @@ class AnchoredPopupRoute<T> extends PopupRoute<T> {
       }
       return;
     }
-    _platter.value = !animation.isCompleted && !_unfolded.value;
+    _platter.value =
+        !(animation.value >= 1.0 || animation.isCompleted) && !_unfolded.value;
   }
 
   @override
@@ -577,16 +578,19 @@ class _RenderPopupMorph extends RenderProxyBox {
       return;
     }
     _closingFrom = _animation.value;
-    _closingFrame = _frame();
+    _closingFrame = _closingFrom >= 1.0 ? null : _frame();
     _closingSurface = hasSize ? surface.rectIn?.call(this) : null;
   }
 
   /// Where the opening stands, or null once it has settled.
   _MorphFrame? _frame() {
-    if (_animation.value >= 1) {
+    if (_animation.value >= 1 && !_platter.value) {
       return null;
     }
-    return (time: _animation.value * _openSeconds, platter: _platter.value);
+    return (
+      time: math.min(1.0, _animation.value) * _openSeconds,
+      platter: _platter.value,
+    );
   }
 
   ValueListenable<bool> _platter;
